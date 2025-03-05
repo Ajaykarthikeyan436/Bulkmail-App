@@ -19,14 +19,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+require("dotenv").config(); // Load .env variables
 
-mongoose.connect("mongodb+srv://ajaykarthikeyan436:1234@cluster0.lj0sn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-    {
-        serverSelectionTimeoutMS: 5000, // Stop trying after 5 seconds
-        socketTimeoutMS: 45000, // Close socket after 45 seconds
-    })
-    .then(function () { console.log("Connected To DB") })
-    .catch(function () { console.log("Failed To Connect") })
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000, // Stop trying after 5 seconds
+  socketTimeoutMS: 45000, // Close socket after 45 seconds
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch(err => console.error("❌ MongoDB Connection Error:", err));
+
 
 const credential = mongoose.model("credential", {}, "bulkmail")
 
