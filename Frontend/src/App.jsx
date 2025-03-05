@@ -41,7 +41,7 @@ function App() {
     setStatus(true);
 
     axios
-        .post("https://backend-69cef94yq-ajays-projects-8ce49744.vercel.app/sendemail", { msg: msg, emaillist: emailList })
+        .post("http://localhost:5000/sendemail", { msg: msg, emaillist: emailList })
         .then(function (data) {
             if (data.data === true) {
                 alert("Email Sent Failed");

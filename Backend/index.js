@@ -10,7 +10,7 @@ app.use(express.json())
 const corsOptions = {
   origin: [
     "http://localhost:5173",  // Allow local frontend
-    "https://bulkmail-app-seven.vercel.app"  // Allow deployed frontend
+    "https://bulkmail-app-vm31.vercel.app/"  // Allow deployed frontend
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
@@ -34,7 +34,7 @@ const credential = mongoose.model("credential", {}, "bulkmail")
 
 app.post("/sendemail", function (req, res) {
 
-    res.header("Access-Control-Allow-Origin","https://bulkmail-app-vm31.vercel.app/")
+    res.header("Access-Control-Allow-Origin","https://bulkmail-app-vm31.vercel.app/","http://localhost:5173/")
 
     console.log("Received Data:", req.body);
 
@@ -49,13 +49,13 @@ app.post("/sendemail", function (req, res) {
 
     credential.find().then(function (data) {
 
-        console.log(data[0].toJSON().user)
+        console.log(data[0].JSON().user)
 
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: data[0].toJSON().user,
-                pass: data[0].toJSON().pass,
+                user: data[0].JSON().user, 
+                pass: data[0].JSON().pass,
             },
         });
 
