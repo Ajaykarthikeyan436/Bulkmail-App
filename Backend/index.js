@@ -8,11 +8,16 @@ app.use(cors())
 app.use(express.json())
 
 const corsOptions = {
-    origin: ["https://bulkmail-app-seven.vercel.app"], // Add your frontend URL here
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
+  origin: [
+    "http://localhost:5173",  // Allow local frontend
+    "https://bulkmail-app-seven.vercel.app"  // Allow deployed frontend
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
+
 app.use(cors(corsOptions));
+
 
 
 mongoose.connect("mongodb+srv://ajaykarthikeyan436:1234@cluster0.lj0sn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
