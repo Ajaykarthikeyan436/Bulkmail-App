@@ -19,22 +19,22 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-require("dotenv").config(); // Load .env variables
+require("dotenv").config();
 
 mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Stop trying after 5 seconds
-  socketTimeoutMS: 45000, // Close socket after 45 seconds
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
 })
-.then(() => console.log("✅ MongoDB Connected"))
-.catch(err => console.error("❌ MongoDB Connection Error:", err));
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.error("MongoDB Connection Error:", err));
 
 
 const credential = mongoose.model("credential", {}, "bulkmail")
 
 
 app.post("/sendemail", function (req, res) {
+
+    res.header("Access-Control-Allow-Origin","https://bulkmail-app-vm31.vercel.app/")
 
     console.log("Received Data:", req.body);
 
