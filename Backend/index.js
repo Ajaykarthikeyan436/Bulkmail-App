@@ -7,12 +7,23 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+const corsOptions = {
+    origin: ["https://bulkmail-app-seven.vercel.app"], // Add your frontend URL here
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true
+};
+app.use(cors(corsOptions));
 
-mongoose.connect("mongodb+srv://ajaykarthikeyan436:1234@cluster0.lj0sn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-.then(function(){console.log("Connected To DB")})
-.catch(function(){console.log("Failed To Connect")})
 
-const credential = mongoose.model("credential",{},"bulkmail")
+mongoose.connect("mongodb+srv://ajaykarthikeyan436:1234@cluster0.lj0sn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    {
+        serverSelectionTimeoutMS: 5000, // Stop trying after 5 seconds
+        socketTimeoutMS: 45000, // Close socket after 45 seconds
+    })
+    .then(function () { console.log("Connected To DB") })
+    .catch(function () { console.log("Failed To Connect") })
+
+const credential = mongoose.model("credential", {}, "bulkmail")
 
 
 app.post("/sendemail", function (req, res) {
@@ -26,12 +37,12 @@ app.post("/sendemail", function (req, res) {
         return res.status(400).json({ error: "Invalid email list" });
     }
 
-    console.log(emailList,msg)
+    console.log(emailList, msg)
 
-    credential.find().then(function(data){
+    credential.find().then(function (data) {
 
         console.log(data[0].toJSON().user)
-    
+
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -39,11 +50,10 @@ app.post("/sendemail", function (req, res) {
                 pass: data[0].toJSON().pass,
             },
         });
-    
+
         new Promise(async function (resolve, reject) {
             try {
-                for (var i = 0; i <= emailList.length; i++) 
-                    {
+                for (var i = 0; i <= emailList.length; i++) {
                     await transporter.sendMail(
                         {
                             from: "ajaykarthikeyan436@gmail.com",
@@ -52,22 +62,22 @@ app.post("/sendemail", function (req, res) {
                             text: msg
                         },
                     )
-    
-                    console.log("Email sent to:"+emailList[i])
+
+                    console.log("Email sent to:" + emailList[i])
                 }
-    
+
                 resolve("Success")
             }
             catch (error) {
                 reject("Failed")
             }
-        }).then(function(){
+        }).then(function () {
             res.send(true)
-        }).catch(function(){
+        }).catch(function () {
             res.send(false)
         })
-    
-    }).catch(function(error){
+
+    }).catch(function (error) {
         console.log(error)
     })
 })
